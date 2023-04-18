@@ -1,0 +1,574 @@
+Form1
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Практическая_23
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+            drawing = false; //Переменная, ответственная за рисование
+            currentPen = new Pen(Color.Black); //Инициализация пера с черным цветом
+            currentPen.Width = tbslider.Value; //Инициализация толщины пера
+            History = new List<Image>(); //Инициализация списка для истории
+        }
+
+        //==================================================================================================================
+        //Forms
+        //Form2-Informations-Developns-And-programm
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form2 AddRec = new Form2();
+            AddRec.Owner = this;
+            AddRec.ShowDialog();
+        }
+        private void PaletteCokorToolStripButton_Click(object sender, EventArgs e)
+        {
+            Form3 colorDialog = new Form3(currentPen.Color);
+            colorDialog.ColorSelected += OnColorSelected;
+            colorDialog.ShowDialog();
+
+        }
+        private void OnColorSelected(Color color)
+        {
+            currentPen.Color = color;
+        }
+        //==================================================================================================================
+        //menu-Save-open-close
+        //Save-File
+        private void SaveToolStripButton_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog SaveDlg = new SaveFileDialog();
+            SaveDlg.Filter = "JPEG Image|*.jpg|Bitmap Image|*.bmp|GIF Image|*.gif|PNG Image|*.png";
+            SaveDlg.Title = "Save an Image File";
+            SaveDlg.FilterIndex = 4; //По умолчанию будет выбрано последнее расширение *.png
+            SaveDlg.ShowDialog();
+            if (SaveDlg.FileName != "") //Если введено не пустое имя
+            {
+                System.IO.FileStream fs = (System.IO.FileStream)SaveDlg.OpenFile();
+                switch (SaveDlg.FilterIndex)
+                {
+                    case 1:
+                        this.pbDrawingSurface.Image.Save(fs, ImageFormat.Jpeg);
+                        break;
+                    case 2:
+                        this.pbDrawingSurface.Image.Save(fs, ImageFormat.Bmp);
+                        break;
+                    case 3:
+                        this.pbDrawingSurface.Image.Save(fs, ImageFormat.Gif);
+                        break;
+                    case 4:
+                        this.pbDrawingSurface.Image.Save(fs, ImageFormat.Png);
+                        break;
+                }
+                fs.Close();
+            }
+            if (pbDrawingSurface.Image != null)
+            {
+                var result = MessageBox.Show("Сохранить текущее изображение перед созданием нового рисунка? ", "Предупреждение", MessageBoxButtons.YesNoCancel);
+                switch (result)
+                {
+                    case DialogResult.No: break;
+                    case DialogResult.Yes: SaveToolStripButton_Click(sender, e); break;
+                    case DialogResult.Cancel: return;
+                }
+            }
+        }
+        //Save-File-menu
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog SaveDlg = new SaveFileDialog();
+            SaveDlg.Filter = "JPEG Image|*.jpg|Bitmap Image|*.bmp|GIF Image|*.gif|PNG Image|*.png";
+            SaveDlg.Title = "Save an Image File";
+            SaveDlg.FilterIndex = 4; //По умолчанию будет выбрано последнее расширение *.png
+            SaveDlg.ShowDialog();
+            if (SaveDlg.FileName != "") //Если введено не пустое имя
+            {
+                System.IO.FileStream fs = (System.IO.FileStream)SaveDlg.OpenFile();
+                switch (SaveDlg.FilterIndex)
+                {
+                    case 1:
+                        this.pbDrawingSurface.Image.Save(fs, ImageFormat.Jpeg);
+                        break;
+                    case 2:
+                        this.pbDrawingSurface.Image.Save(fs, ImageFormat.Bmp);
+                        break;
+                    case 3:
+                        this.pbDrawingSurface.Image.Save(fs, ImageFormat.Gif);
+                        break;
+                    case 4:
+                        this.pbDrawingSurface.Image.Save(fs, ImageFormat.Png);
+                        break;
+                }
+                fs.Close();
+            }
+            /*Фича #2
+            Если вдруг пользователь захотел создать еще один новый файл, при условии,
+            что уже было что - то нарисовано в PictureBox, можно будет ему предложить
+            сохранить текущее изображение, чтобы оно не потерялось*/
+            if (pbDrawingSurface.Image != null)
+            {
+                var result = MessageBox.Show("Сохранить текущее изображение перед созданием нового рисунка? ", "Предупреждение", MessageBoxButtons.YesNoCancel);
+                switch (result)
+                {
+                    case DialogResult.No: break;
+                    case DialogResult.Yes: SaveToolStripButton_Click(sender, e); break;
+                    case DialogResult.Cancel: return;
+                }
+            }
+        }
+        //Open-File
+        private void OpenToolStripButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog OP = new OpenFileDialog();
+            OP.Filter = "JPEG Image|*.jpg|Bitmap Image|*.bmp|GIF Image|*.gif|PNG Image | *.png";
+            OP.Title = "Open an Image File";
+            OP.FilterIndex = 1; //По умолчанию будет выбрано первое расширение *.jpg И, когда пользователь укажет нужный путь к картинке, ее нужно будет загрузить в PictureBox:
+            if (OP.ShowDialog() != DialogResult.Cancel)
+            {
+                pbDrawingSurface.Load(OP.FileName);
+                pbDrawingSurface.AutoSize = true;
+            }
+        }
+        //Open-File-menu
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog OP = new OpenFileDialog();
+            OP.Filter = "JPEG Image|*.jpg|Bitmap Image|*.bmp|GIF Image|*.gif|PNG Image | *.png";
+            OP.Title = "Open an Image File";
+            OP.FilterIndex = 1; //По умолчанию будет выбрано первое расширение *.jpg И, когда пользователь укажет нужный путь к картинке, ее нужно будет загрузить в PictureBox:
+            if (OP.ShowDialog() != DialogResult.Cancel)
+            {
+                pbDrawingSurface.Load(OP.FileName);
+                pbDrawingSurface.AutoSize = true;
+            }
+        }
+        //Exit-programm
+        private void ExitToolStripButton_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+        //Exit-programm-menu
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+        //=========================================================================================================================================================================
+
+        //Глобальные переменные
+        bool drawing;
+        int historyCounter; //Счетчик истории
+        GraphicsPath currentPath;
+        Point oldLocation;
+        public Pen currentPen;
+        Color historyColor; //Сохранение текущего цвета перед использованием ластика
+        List<Image> History; //Список для истории
+
+
+        //New-picturesBox
+        private void NewFileToolStripButton_Click(object sender, EventArgs e)
+        {
+            History.Clear();
+            historyCounter = 0;
+            Bitmap pic = new Bitmap(1100, 470);
+            pbDrawingSurface.Image = pic;
+            History.Add(new Bitmap(pbDrawingSurface.Image));
+        }
+        //New-menu-picturesBox
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            History.Clear();
+            historyCounter = 0;
+            Bitmap pic = new Bitmap(1100, 470);
+            pbDrawingSurface.Image = pic;
+            History.Add(new Bitmap(pbDrawingSurface.Image));
+        }
+        //Фича #1.чтобы пользователь по ошибке не начал рисовать в неинициализированной области PictureBox
+        private void pbDrawingSurface_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (pbDrawingSurface.Image == null)
+            {
+                MessageBox.Show("Сначала создайте новый файл!");
+                return;
+            }
+            if (e.Button == MouseButtons.Left)
+            {
+                drawing = true;
+                oldLocation = e.Location;
+                currentPath = new GraphicsPath();
+            }
+            if (e.Button == MouseButtons.Right)
+            {
+                historyColor = currentPen.Color; // сохраняем текущий цвет пера
+                currentPen.Color = Color.White; // меняем цвет пера на белый
+            }
+        }
+        private void pbDrawingSurface_MouseUp(object sender, MouseEventArgs e)
+        {
+            //Очистка ненужной истории
+            History.RemoveRange(historyCounter + 1, History.Count - historyCounter - 1);
+            History.Add(new Bitmap(pbDrawingSurface.Image));
+            if (historyCounter + 1 < 10)
+            {
+                historyCounter++;
+                if (History.Count - 1 == 10)
+                {
+                    History.RemoveAt(0);
+                }
+            }
+
+            drawing = false;
+            try
+            {
+                currentPath.Dispose();
+            }
+            catch { };
+            if (e.Button == MouseButtons.Right)
+            {
+                currentPen.Color = historyColor;
+            }
+        }
+        private void pbDrawingSurface_MouseMove(object sender, MouseEventArgs e)
+        {
+            lblCoordinates.Text = "x = "+e.X.ToString() + "; y = " + e.Y.ToString();
+            if (drawing)
+            {
+                Graphics g = Graphics.FromImage(pbDrawingSurface.Image);
+                currentPath.AddLine(oldLocation, e.Location);
+                g.DrawPath(currentPen, currentPath);
+                oldLocation = e.Location;
+                g.Dispose();
+                pbDrawingSurface.Invalidate();
+            }
+        }
+
+        //Толщина 
+        private void tbslider_Scroll(object sender, EventArgs e)
+        {
+            currentPen.Width = tbslider.Value;
+        }
+
+        //-->
+        private void UndoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (History.Count != 0 && historyCounter != 0)
+            {
+                pbDrawingSurface.Image = new Bitmap(History[--historyCounter]);
+            }
+            else MessageBox.Show("История пуста");
+        }
+        //<--
+        private void RenoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (historyCounter < History.Count - 1)
+            {
+                pbDrawingSurface.Image = new Bitmap(History[++historyCounter]);
+            }
+            else MessageBox.Show("История пуста");
+        }
+
+        //Стили Pen
+        private void solidToolStripMenuItem_Click(object sender, EventArgs e)
+        {   currentPen.DashStyle = DashStyle.Solid;
+            solidToolStripMenuItem.Checked = true;
+            dotToolStripMenuItem.Checked = false;
+            dashToolStripMenuItem.Checked = false;
+        }
+        private void dotToolStripMenuItem_Click(object sender, EventArgs e)
+        {   currentPen.DashStyle = DashStyle.Dot;
+            solidToolStripMenuItem.Checked = false;
+            dotToolStripMenuItem.Checked = true;
+            dashToolStripMenuItem.Checked = false;
+        }
+
+        private void dashToolStripMenuItem_Click(object sender, EventArgs e)
+        {   currentPen.DashStyle = DashStyle.DashDotDot;
+            solidToolStripMenuItem.Checked = false;
+            dotToolStripMenuItem.Checked = false;
+            dashToolStripMenuItem.Checked = true;
+        }
+
+
+        private void Form1_Load(object sender, EventArgs e)
+        {}
+        private void pbDrawingSurface_Click(object sender, EventArgs e)
+        {}
+
+    
+    }
+}
+
+
+___________________________________________________________________________________________________________________________________________________________________________________________
+Form2
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Практическая_23
+{
+    public partial class Form2 : Form
+    {
+        public Form2()
+        {
+            InitializeComponent();
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            Form1 Main = this.Owner as Form1;
+        }
+    }
+}
+
+
+
+___________________________________________________________________________________________________________________________________________________________________________________________
+Form3
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Практическая_23
+{
+    public partial class Form3 : Form
+    {
+        Color colorResult;
+        public delegate void ColorSelectedEventHandler(Color color);
+        public event ColorSelectedEventHandler ColorSelected;
+        private Color currentColor;
+        private Color previousColor;
+
+        public Form3(Color color)
+        {        
+            InitializeComponent();
+            // сохраняем текущий цвет и присваиваем элементам управления на форме
+            currentColor = color;
+            previousColor = color;
+
+            HSBRed.Tag = NUDRed;
+            HSBGreen.Tag = NUDGreen;
+            HSBBlue.Tag = NUDBlue;
+            NUDRed.Tag = HSBRed;
+            NUDGreen.Tag = HSBGreen;
+            NUDBlue.Tag = HSBBlue;
+            NUDRed.Value = color.R;
+            NUDGreen.Value = color.G;
+            NUDBlue.Value = color.B;
+
+            UpdateColor();
+        }
+        private void UpdateColor()
+        {
+              colorResult = Color.FromArgb(HSBRed.Value, HSBGreen.Value,HSBBlue.Value);
+              PBColors.BackColor = colorResult;
+        }
+        private void btnOk_Click_1(object sender, EventArgs e)
+        {
+            if (ColorSelected != null)
+            {
+                ColorSelected(colorResult);
+            }
+            this.Close();
+        }
+        private void btnCancle_Click(object sender, EventArgs e)
+        {
+            // возврат к предыдущему цвету
+            currentColor = previousColor;
+            NUDRed.Value = currentColor.R;
+            NUDGreen.Value = currentColor.G;
+            NUDBlue.Value = currentColor.B;
+            HSBRed.Value = currentColor.R;
+            HSBGreen.Value = currentColor.G;
+            HSBBlue.Value = currentColor.B;
+            UpdateColor();
+        }
+
+
+        private void HSBRed_ValueChanged(object sender, EventArgs e)
+        {
+            ScrollBar scrollBar = (ScrollBar)sender;
+            NumericUpDown numericUpDown = (NumericUpDown)scrollBar.Tag;
+            numericUpDown.Value = scrollBar.Value;
+        }
+        private void NUDRed_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            ScrollBar scrollBar = (ScrollBar)numericUpDown.Tag;
+            scrollBar.Value = (int)numericUpDown.Value;
+        }
+        private void HSBGreen_ValueChanged(object sender, EventArgs e)
+        {
+            ScrollBar scrollBar = (ScrollBar)sender;
+            NumericUpDown numericUpDown = (NumericUpDown)scrollBar.Tag;
+            numericUpDown.Value = scrollBar.Value;
+        }
+        private void NUDGreen_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            ScrollBar scrollBar = (ScrollBar)numericUpDown.Tag;
+            scrollBar.Value = (int)numericUpDown.Value;
+        }
+        private void HSBBlue_ValueChanged(object sender, EventArgs e)
+        {
+            ScrollBar scrollBar = (ScrollBar)sender;
+            NumericUpDown numericUpDown = (NumericUpDown)scrollBar.Tag;
+            numericUpDown.Value = scrollBar.Value;
+
+        }
+        private void NUDBlue_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            ScrollBar scrollBar = (ScrollBar)numericUpDown.Tag;
+            scrollBar.Value = (int)numericUpDown.Value;
+        }
+        //Смешивание
+        private void HSBRed_Scroll(object sender, ScrollEventArgs e)
+        {
+            UpdateColor();
+        }
+
+        private void HSBGreen_Scroll(object sender, ScrollEventArgs e)
+        {
+            UpdateColor();
+        }
+
+        private void HSBBlue_Scroll(object sender, ScrollEventArgs e)
+        {
+            UpdateColor();
+        }
+
+        private void btnOtherColors_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                HSBRed.Value = colorDialog.Color.R;
+                HSBGreen.Value = colorDialog.Color.G;
+                HSBBlue.Value = colorDialog.Color.B;
+                colorResult = colorDialog.Color;
+
+                UpdateColor();
+            }
+
+        }
+        private void Form3_Load(object sender, EventArgs e)
+        {
+
+        }
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+        }
+    }
+}
+
+
+
+___________________________________________________________________________________________________________________________________________________________________________________________
+C# Если пользователь захочет загрузить картинку, размеры которой превышают
+размеры самого окна PictureBox, то возникнет одна проблема. Во-первых,
+загруженная картинка не сожмется до размеров окна PictureBox, а откроется
+в полном размере, но видно будет лишь та часть, которая влезет в окно. Вовторых, у пользователя не будет возможности перемещать данную картинку
+во всех направлениях для ее просмотра и изменения. Для решения этой
+проблемы можно воспользоваться следующей хитростью: нужно поместить
+под PictureBox Panel. С помощью Panel у пользователя появится
+возможность двигать картинку во всех направлениях в том случае, если ее
+размер будет превышать размеры окна PictureBox.
+
+
+
+
+
+Да, это правильный подход для решения данной проблемы. Ниже приведен пример кода, который демонстрирует, как это можно сделать:
+
+```
+private void btnOpen_Click(object sender, EventArgs e)
+{
+    OpenFileDialog openFileDialog1 = new OpenFileDialog();
+    if (openFileDialog1.ShowDialog() == DialogResult.OK)
+    {
+        pictureBox1.Image = Image.FromFile(openFileDialog1.FileName);
+        pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
+        if (pictureBox1.Width > panel1.Width || pictureBox1.Height > panel1.Height)
+        {
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+        }
+    }
+}
+
+private void panel1_Resize(object sender, EventArgs e)
+{
+    if (pictureBox1.SizeMode == PictureBoxSizeMode.StretchImage)
+    {
+        pictureBox1.Size = panel1.Size;
+    }
+}
+
+private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+{
+    if (pictureBox1.SizeMode == PictureBoxSizeMode.StretchImage)
+    {
+        pictureBox1.Location = new Point(0, 0);
+    }
+}
+
+private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+{
+    if (pictureBox1.SizeMode == PictureBoxSizeMode.StretchImage)
+    {
+        if (e.Button == MouseButtons.Left)
+        {
+            pictureBox1.Left += e.X - lastPoint.X;
+            pictureBox1.Top += e.Y - lastPoint.Y;
+        }
+    }
+}
+
+private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+{
+    if (pictureBox1.SizeMode == PictureBoxSizeMode.StretchImage)
+    {
+        lastPoint = e.Location;
+    }
+}
+
+private void pictureBox1_Click(object sender, EventArgs e)
+{
+    if (pictureBox1.SizeMode == PictureBoxSizeMode.StretchImage)
+    {
+        pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
+    }
+}
+```
+
+В этом примере, при открытии картинки она сначала устанавливается в режим автоматического масштабирования (PictureBoxSizeMode.AutoSize). Затем, если размер картинки больше размера панели, то ее режим устанавливается в модифицированное масштабирование (PictureBoxSizeMode.StretchImage). 
+
+Кроме того, обработчик события panel1_Resize позволяет устанавливать размеры PictureBox равными размерам панели, если его размер изменился.
+
+Обработчики событий pictureBox1_MouseDown, pictureBox1_MouseMove, pictureBox1_MouseUp и pictureBox1_Click добавляют возможность перемещения изображения внутри PictureBox, если его размеры превышают размеры панели.
+
+
+

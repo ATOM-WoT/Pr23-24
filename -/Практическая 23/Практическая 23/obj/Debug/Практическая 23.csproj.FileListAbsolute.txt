@@ -1,0 +1,39 @@
+C:\Users\I'm\Desktop\колледж\АОп\С#\Практическая 23\Практическая 23\bin\Debug\Практическая 23.exe.config
+C:\Users\I'm\Desktop\колледж\АОп\С#\Практическая 23\Практическая 23\bin\Debug\Практическая 23.exe
+C:\Users\I'm\Desktop\колледж\АОп\С#\Практическая 23\Практическая 23\bin\Debug\Практическая 23.pdb
+C:\Users\I'm\Desktop\колледж\АОп\С#\Практическая 23\Практическая 23\obj\Debug\Практическая 23.csproj.AssemblyReference.cache
+C:\Users\I'm\Desktop\колледж\АОп\С#\Практическая 23\Практическая 23\obj\Debug\Практическая 23.csproj.SuggestedBindingRedirects.cache
+C:\Users\I'm\Desktop\колледж\АОп\С#\Практическая 23\Практическая 23\obj\Debug\Практическая_23.Form1.resources
+C:\Users\I'm\Desktop\колледж\АОп\С#\Практическая 23\Практическая 23\obj\Debug\Практическая_23.Properties.Resources.resources
+C:\Users\I'm\Desktop\колледж\АОп\С#\Практическая 23\Практическая 23\obj\Debug\Практическая 23.csproj.GenerateResource.cache
+C:\Users\I'm\Desktop\колледж\АОп\С#\Практическая 23\Практическая 23\obj\Debug\Практическая 23.csproj.CoreCompileInputs.cache
+C:\Users\I'm\Desktop\колледж\АОп\С#\Практическая 23\Практическая 23\obj\Debug\Практическая 23.exe
+C:\Users\I'm\Desktop\колледж\АОп\С#\Практическая 23\Практическая 23\obj\Debug\Практическая 23.pdb
+C:\Users\I'm\Desktop\колледж\АОп\С#\Практическая 23\Практическая 23\obj\Debug\Практическая_23.Form2.resources
+C:\Users\I'm\Desktop\колледж\АОп\С#\Практическая 23\Практическая 23\obj\Debug\Практическая_23.Form3.resources
+C:\Users\sereg\Desktop\-\Практическая 23\Практическая 23\bin\Debug\Практическая 23.exe.config
+C:\Users\sereg\Desktop\-\Практическая 23\Практическая 23\bin\Debug\Практическая 23.exe
+C:\Users\sereg\Desktop\-\Практическая 23\Практическая 23\bin\Debug\Практическая 23.pdb
+C:\Users\sereg\Desktop\-\Практическая 23\Практическая 23\obj\Debug\Практическая 23.csproj.AssemblyReference.cache
+C:\Users\sereg\Desktop\-\Практическая 23\Практическая 23\obj\Debug\Практическая 23.csproj.SuggestedBindingRedirects.cache
+C:\Users\sereg\Desktop\-\Практическая 23\Практическая 23\obj\Debug\Практическая_23.Form1.resources
+C:\Users\sereg\Desktop\-\Практическая 23\Практическая 23\obj\Debug\Практическая_23.Form2.resources
+C:\Users\sereg\Desktop\-\Практическая 23\Практическая 23\obj\Debug\Практическая_23.Form3.resources
+C:\Users\sereg\Desktop\-\Практическая 23\Практическая 23\obj\Debug\Практическая_23.Properties.Resources.resources
+C:\Users\sereg\Desktop\-\Практическая 23\Практическая 23\obj\Debug\Практическая 23.csproj.GenerateResource.cache
+C:\Users\sereg\Desktop\-\Практическая 23\Практическая 23\obj\Debug\Практическая 23.csproj.CoreCompileInputs.cache
+C:\Users\sereg\Desktop\-\Практическая 23\Практическая 23\obj\Debug\Практическая 23.exe
+C:\Users\sereg\Desktop\-\Практическая 23\Практическая 23\obj\Debug\Практическая 23.pdb
+C:\Users\sereg\OneDrive\Рабочий стол\-\Практическая 23\Практическая 23\bin\Debug\Практическая 23.exe.config
+C:\Users\sereg\OneDrive\Рабочий стол\-\Практическая 23\Практическая 23\bin\Debug\Практическая 23.exe
+C:\Users\sereg\OneDrive\Рабочий стол\-\Практическая 23\Практическая 23\bin\Debug\Практическая 23.pdb
+C:\Users\sereg\OneDrive\Рабочий стол\-\Практическая 23\Практическая 23\obj\Debug\Практическая 23.csproj.AssemblyReference.cache
+C:\Users\sereg\OneDrive\Рабочий стол\-\Практическая 23\Практическая 23\obj\Debug\Практическая 23.csproj.SuggestedBindingRedirects.cache
+C:\Users\sereg\OneDrive\Рабочий стол\-\Практическая 23\Практическая 23\obj\Debug\Практическая_23.Form1.resources
+C:\Users\sereg\OneDrive\Рабочий стол\-\Практическая 23\Практическая 23\obj\Debug\Практическая_23.Form2.resources
+C:\Users\sereg\OneDrive\Рабочий стол\-\Практическая 23\Практическая 23\obj\Debug\Практическая_23.Form3.resources
+C:\Users\sereg\OneDrive\Рабочий стол\-\Практическая 23\Практическая 23\obj\Debug\Практическая_23.Properties.Resources.resources
+C:\Users\sereg\OneDrive\Рабочий стол\-\Практическая 23\Практическая 23\obj\Debug\Практическая 23.csproj.GenerateResource.cache
+C:\Users\sereg\OneDrive\Рабочий стол\-\Практическая 23\Практическая 23\obj\Debug\Практическая 23.csproj.CoreCompileInputs.cache
+C:\Users\sereg\OneDrive\Рабочий стол\-\Практическая 23\Практическая 23\obj\Debug\Практическая 23.exe
+C:\Users\sereg\OneDrive\Рабочий стол\-\Практическая 23\Практическая 23\obj\Debug\Практическая 23.pdb
